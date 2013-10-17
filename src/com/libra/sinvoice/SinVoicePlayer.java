@@ -52,11 +52,11 @@ public class SinVoicePlayer implements Encoder.Listener, Encoder.Callback, PcmPl
     }
 
     public SinVoicePlayer() {
-        this(Util.DEFAULT_CODE_BOOK);
+        this(Common.DEFAULT_CODE_BOOK);
     }
 
     public SinVoicePlayer(String codeBook) {
-        this(codeBook, Util.DEFAULT_SAMPLE_RATE, Util.DEFAULT_BUFFER_SIZE, Util.DEFAULT_BUFFER_COUNT);
+        this(codeBook, Common.DEFAULT_SAMPLE_RATE, Common.DEFAULT_BUFFER_SIZE, Common.DEFAULT_BUFFER_COUNT);
     }
 
     public SinVoicePlayer(String codeBook, int sampleRate, int bufferSize, int buffCount) {
@@ -86,7 +86,7 @@ public class SinVoicePlayer implements Encoder.Listener, Encoder.Callback, PcmPl
 
         if (!TextUtils.isEmpty(text)) {
             mCodes.clear();
-            mCodes.add(Util.START_TOKEN);
+            mCodes.add(Common.START_TOKEN);
             int len = text.length();
             for (int i = 0; i < len; ++i) {
                 char ch = text.charAt(i);
@@ -100,7 +100,7 @@ public class SinVoicePlayer implements Encoder.Listener, Encoder.Callback, PcmPl
                 }
             }
             if (ret) {
-                mCodes.add(Util.STOP_TOKEN);
+                mCodes.add(Common.STOP_TOKEN);
             }
         } else {
             ret = false;

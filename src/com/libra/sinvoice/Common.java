@@ -16,7 +16,7 @@
  */
 package com.libra.sinvoice;
 
-public class Util {
+public class Common {
     public final static int START_TOKEN = 0;
     public final static int STOP_TOKEN = 6;
     public final static String DEFAULT_CODE_BOOK = "12345";

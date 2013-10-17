@@ -68,7 +68,7 @@ public class Buffer {
     }
 
     public Buffer() {
-        this(Util.DEFAULT_BUFFER_COUNT, Util.DEFAULT_BUFFER_SIZE);
+        this(Common.DEFAULT_BUFFER_COUNT, Common.DEFAULT_BUFFER_SIZE);
     }
 
     public Buffer(int bufferCount, int bufferSize) {

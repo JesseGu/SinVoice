@@ -48,11 +48,11 @@ public class SinVoiceRecognition implements Record.Listener, Record.Callback, Vo
     }
 
     public SinVoiceRecognition() {
-        this(Util.DEFAULT_CODE_BOOK);
+        this(Common.DEFAULT_CODE_BOOK);
     }
 
     public SinVoiceRecognition(String codeBook) {
-        this(codeBook, Util.DEFAULT_SAMPLE_RATE, Util.DEFAULT_BUFFER_SIZE, Util.DEFAULT_BUFFER_COUNT);
+        this(codeBook, Common.DEFAULT_SAMPLE_RATE, Common.DEFAULT_BUFFER_SIZE, Common.DEFAULT_BUFFER_COUNT);
     }
 
     public SinVoiceRecognition(String codeBook, int sampleRate, int bufferSize, int bufferCount) {
@@ -209,9 +209,9 @@ public class SinVoiceRecognition implements Record.Listener, Record.Callback, Vo
     public void onRecognition(int index) {
         LogHelper.d(TAG, "zzzzzzzzzzzzzrecognition:" + index);
         if (null != mListener) {
-            if (Util.START_TOKEN == index) {
+            if (Common.START_TOKEN == index) {
                 mListener.onRecognitionStart();
-            } else if (Util.STOP_TOKEN == index) {
+            } else if (Common.STOP_TOKEN == index) {
                 mListener.onRecognitionEnd();
             } else if (index > 0 && index <= mMaxCodeIndex) {
                 mListener.onRecognition(mCodeBook.charAt(index - 1));
