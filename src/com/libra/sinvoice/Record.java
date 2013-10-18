@@ -74,8 +74,6 @@ public class Record {
 
     public void start() {
         if (STATE_STOP == mState) {
-            mState = STATE_START;
-
             switch (mChannel) {
             case CHANNEL_1:
                 mChannelConfig = AudioFormat.CHANNEL_IN_MONO;
@@ -97,44 +95,55 @@ public class Record {
 
             int minBufferSize = AudioRecord.getMinBufferSize(mFrequence, mChannelConfig, mAudioEncoding);
             LogHelper.d(TAG, "minBufferSize:" + minBufferSize);
+            if ( mBufferSize >= minBufferSize ) {
+                AudioRecord record = new AudioRecord(MediaRecorder.AudioSource.MIC, mFrequence, mChannelConfig, mAudioEncoding, mBufferSize);
+                if (null != record) {
+                    try {
+                        mState = STATE_START;
+                        record.startRecording();
+                        LogHelper.d(TAG, "record start");
 
-            AudioRecord record = new AudioRecord(MediaRecorder.AudioSource.MIC, mFrequence, mChannelConfig, mAudioEncoding, mBufferSize);
-            record.startRecording();
-            LogHelper.d(TAG, "record start");
+                        if (null != mCallback) {
+                            if (null != mListener) {
+                                mListener.onStartRecord();
+                            }
 
-            if (null != mCallback) {
-                if (null != mListener) {
-                    mListener.onStartRecord();
-                }
+                            while (STATE_START == mState) {
+                                BufferData data = mCallback.getRecordBuffer();
+                                if (null != data) {
+                                    if (null != data.mData) {
+                                        int bufferReadResult = record.read(data.mData, 0, mBufferSize);
+                                        data.setFilledSize(bufferReadResult);
 
-                while (STATE_START == mState) {
-                    BufferData data = mCallback.getRecordBuffer();
-                    if (null != data) {
-                        if (null != data.mData) {
-                            int bufferReadResult = record.read(data.mData, 0, mBufferSize);
-                            data.setFilledSize(bufferReadResult);
+                                        mCallback.freeRecordBuffer(data);
+                                    } else {
+                                        // end of input
+                                        LogHelper.d(TAG, "get end input data, so stop");
+                                        break;
+                                    }
+                                } else {
+                                    LogHelper.d(TAG, "get null data");
+                                    break;
+                                }
+                            }
 
-                            mCallback.freeRecordBuffer(data);
-                        } else {
-                            // end of input
-                            LogHelper.d(TAG, "get end input data, so stop");
-                            break;
+                            if (null != mListener) {
+                                mListener.onStopRecord();
+                            }
                         }
-                    } else {
-                        LogHelper.d(TAG, "get null data");
-                        break;
+
+                        record.stop();
+                        record.release();
+
+                        LogHelper.d(TAG, "record stop");
+                    } catch ( IllegalStateException e) {
+                        e.printStackTrace();
+                        LogHelper.e(TAG, "start record error");
                     }
                 }
-
-                if (null != mListener) {
-                    mListener.onStopRecord();
-                }
+            } else {
+                LogHelper.e(TAG, "bufferSize is too small");
             }
-
-            record.stop();
-            record.release();
-
-            LogHelper.d(TAG, "record stop");
         }
     }
 
