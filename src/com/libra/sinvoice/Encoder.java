@@ -89,7 +89,7 @@ public class Encoder implements SinGenerator.Listener, SinGenerator.Callback {
                     break;
                 }
             }
-            mSinGenerator.stop();
+            stop();
 
             if (null != mListener) {
                 mListener.onEndEncode();
