@@ -79,9 +79,9 @@ public class VoiceRecognition {
 
     public void start() {
         if (STATE_STOP == mState) {
-            mState = STATE_START;
 
             if (null != mCallback) {
+                mState = STATE_START;
                 mCirclePointCount = 0;
 
                 mIsStartCounting = false;
@@ -105,11 +105,12 @@ public class VoiceRecognition {
                             break;
                         }
                     } else {
-                        LogHelper.d(TAG, "get null recognition buffer");
+                        LogHelper.e(TAG, "get null recognition buffer");
                         break;
                     }
                 }
 
+                mState = STATE_STOP;
                 if (null != mListener) {
                     mListener.onStopRecognition();
                 }

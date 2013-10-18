@@ -82,7 +82,7 @@ public class Encoder implements SinGenerator.Listener, SinGenerator.Callback {
                     if (index >= 0 && index < CODE_FREQUENCY.length) {
                         mSinGenerator.gen(CODE_FREQUENCY[index], duration);
                     } else {
-                        LogHelper.d(TAG, "code index error");
+                        LogHelper.e(TAG, "code index error");
                     }
                 } else {
                     LogHelper.d(TAG, "encode force stop");

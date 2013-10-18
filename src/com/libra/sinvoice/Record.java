@@ -122,7 +122,7 @@ public class Record {
                                         break;
                                     }
                                 } else {
-                                    LogHelper.d(TAG, "get null data");
+                                    LogHelper.e(TAG, "get null data");
                                     break;
                                 }
                             }
@@ -140,6 +140,7 @@ public class Record {
                         e.printStackTrace();
                         LogHelper.e(TAG, "start record error");
                     }
+                    mState = STATE_STOP;
                 }
             } else {
                 LogHelper.e(TAG, "bufferSize is too small");

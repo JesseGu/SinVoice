@@ -58,10 +58,10 @@ public class PcmPlayer {
     public void start() {
         LogHelper.d(TAG, "start");
         if (STATE_STOP == mState && null != mAudio) {
-            mState = STATE_START;
             mPlayedLen = 0;
 
             if (null != mCallback) {
+                mState = STATE_START;
                 LogHelper.d(TAG, "start");
                 if (null != mListener) {
                     mListener.onPlayStart();
@@ -85,16 +85,17 @@ public class PcmPlayer {
                             break;
                         }
                     } else {
-                        LogHelper.d(TAG, "get null data");
+                        LogHelper.e(TAG, "get null data");
                         break;
                     }
                 }
 
-                if (STATE_STOP == mState) {
+                if (null != mAudio) {
                     mAudio.pause();
                     mAudio.flush();
                     mAudio.stop();
                 }
+                mState = STATE_STOP;
                 if (null != mListener) {
                     mListener.onPlayStop();
                 }

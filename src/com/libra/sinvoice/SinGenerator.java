@@ -125,7 +125,7 @@ public class SinGenerator {
                                 mFilledSize = 0;
                                 buffer = mCallback.getGenBuffer();
                                 if (null == buffer) {
-                                    LogHelper.d(TAG, "get null buffer");
+                                    LogHelper.e(TAG, "get null buffer");
                                     break;
                                 }
                             }
@@ -142,7 +142,7 @@ public class SinGenerator {
                         }
                     }
                 } else {
-                    LogHelper.d(TAG, "get null buffer");
+                    LogHelper.e(TAG, "get null buffer");
                 }
 
                 if (null != buffer) {
