@@ -78,12 +78,13 @@ public class Buffer {
         // we want to put the end buffer, so need to add 1
         mConsumeQueue = new LinkedBlockingQueue<BufferData>(mBufferCount + 1);
 
-        for (int i = 0; i < mBufferCount; ++i) {
-            try {
+        try {
+            for (int i = 0; i < mBufferCount; ++i) {
                 mProducerQueue.put(new BufferData(mBufferSize));
-            } catch (InterruptedException e) {
-                e.printStackTrace();
             }
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+            LogHelper.e(TAG, "put buffer data error");
         }
     }
 
