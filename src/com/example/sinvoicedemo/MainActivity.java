@@ -46,7 +46,7 @@ public class MainActivity extends Activity implements SinVoiceRecognition.Listen
             public void onClick(View arg0) {
                 String text = genText(7);
                 playTextView.setText(text);
-                mSinVoicePlayer.play(text);
+                mSinVoicePlayer.play(text, true, 1000);
             }
         });
 

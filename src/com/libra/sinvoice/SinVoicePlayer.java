@@ -110,6 +110,10 @@ public class SinVoicePlayer implements Encoder.Listener, Encoder.Callback, PcmPl
     }
 
     public void play(final String text) {
+        play(text, false, 0);
+    }
+
+    public void play(final String text, final boolean repeat, final int muteInterval) {
         if (STATE_STOP == mState && null != mCodeBook && convertTextToCodes(text)) {
             mState = STATE_PENDING;
 
@@ -126,16 +130,14 @@ public class SinVoicePlayer implements Encoder.Listener, Encoder.Callback, PcmPl
             mEncodeThread = new Thread() {
                 @Override
                 public void run() {
-                    LogHelper.d(TAG, "encode start");
-                    mEncoder.encode(mCodes, DEFAULT_GEN_DURATION);
-                    LogHelper.d(TAG, "encode end");
+                    do {
+                        LogHelper.d(TAG, "encode start");
+                        mEncoder.encode(mCodes, DEFAULT_GEN_DURATION, muteInterval);
+                        LogHelper.d(TAG, "encode end");
 
-                    LogHelper.d(TAG, "stop player start");
+                        mEncoder.stop();
+                    } while (repeat && STATE_PENDING != mState);
                     stopPlayer();
-                    LogHelper.d(TAG, "stop player end");
-
-                    mEncoder.stop();
-                    mPlayer.stop();
                 }
             };
             if (null != mEncodeThread) {

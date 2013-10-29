@@ -68,6 +68,10 @@ public class Encoder implements SinGenerator.Listener, SinGenerator.Callback {
 
     // content of input from 0 to (CODE_FREQUENCY.length-1)
     public void encode(List<Integer> codes, int duration) {
+        encode(codes, duration, 0);
+    }
+
+    public void encode(List<Integer> codes, int duration, int muteInterval) {
         if (STATE_STOPED == mState) {
             mState = STATE_ENCODING;
 
@@ -88,6 +92,12 @@ public class Encoder implements SinGenerator.Listener, SinGenerator.Callback {
                     LogHelper.d(TAG, "encode force stop");
                     break;
                 }
+            }
+            // for mute
+            if (STATE_ENCODING == mState) {
+                mSinGenerator.gen(0, muteInterval);
+            } else {
+                LogHelper.d(TAG, "encode force stop");
             }
             stop();
 
