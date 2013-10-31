@@ -25,14 +25,14 @@ public class VoiceRecognition {
     private final static int STATE_STEP1 = 1;
     private final static int STATE_STEP2 = 2;
     private final static int INDEX[] = { -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 6, -1, -1, -1, -1, 5, -1, -1, -1, 4, -1, -1, 3, -1, -1, 2, -1, -1, 1, -1, -1, 0 };
-    private final static int MAX_CIRCLE = 31;
-    private final static int MIN_CIRCLE = 10;
+    private final static int MAX_SAMPLING_POINT_COUNT = 31;
+    private final static int MIN_SAMPLING_POINT_COUNT = 10;
 
     private int mState;
     private Listener mListener;
     private Callback mCallback;
 
-    private int mCirclePointCount = 0;
+    private int mSamplingPointCount = 0;
 
     private int mSampleRate;
     private int mChannel;
@@ -82,7 +82,7 @@ public class VoiceRecognition {
 
             if (null != mCallback) {
                 mState = STATE_START;
-                mCirclePointCount = 0;
+                mSamplingPointCount = 0;
 
                 mIsStartCounting = false;
                 mStep = STATE_STEP1;
@@ -142,12 +142,12 @@ public class VoiceRecognition {
                 } else if (STATE_STEP2 == mStep) {
                     if (sh > 0) {
                         mIsStartCounting = true;
-                        mCirclePointCount = 0;
+                        mSamplingPointCount = 0;
                         mStep = STATE_STEP1;
                     }
                 }
             } else {
-                ++mCirclePointCount;
+                ++mSamplingPointCount;
                 if (STATE_STEP1 == mStep) {
                     if (sh < 0) {
                         mStep = STATE_STEP2;
@@ -155,12 +155,12 @@ public class VoiceRecognition {
                 } else if (STATE_STEP2 == mStep) {
                     if (sh > 0) {
                         // preprocess the circle
-                        int circleCount = preReg(mCirclePointCount);
+                        int samplingPointCount = preReg(mSamplingPointCount);
 
                         // recognise voice
-                        reg(circleCount);
+                        reg(samplingPointCount);
 
-                        mCirclePointCount = 0;
+                        mSamplingPointCount = 0;
                         mStep = STATE_STEP1;
                     }
                 }
@@ -168,14 +168,14 @@ public class VoiceRecognition {
         }
     }
 
-    private int preReg(int circleCount) {
-        switch (circleCount) {
+    private int preReg(int samplingPointCount) {
+        switch (samplingPointCount) {
         case 8:
         case 9:
         case 10:
         case 11:
         case 12:
-            circleCount = 10;
+            samplingPointCount = 10;
             break;
 
         case 13:
@@ -183,59 +183,59 @@ public class VoiceRecognition {
         case 15:
         case 16:
         case 17:
-            circleCount = 15;
+            samplingPointCount = 15;
             break;
 
         case 18:
         case 19:
         case 20:
-            circleCount = 19;
+            samplingPointCount = 19;
             break;
 
         case 21:
         case 22:
         case 23:
-            circleCount = 22;
+            samplingPointCount = 22;
             break;
 
         case 24:
         case 25:
         case 26:
-            circleCount = 25;
+            samplingPointCount = 25;
             break;
 
         case 27:
         case 28:
         case 29:
-            circleCount = 28;
+            samplingPointCount = 28;
             break;
 
         case 30:
         case 31:
         case 32:
-            circleCount = 31;
+            samplingPointCount = 31;
             break;
 
         default:
-            circleCount = 0;
+            samplingPointCount = 0;
             break;
         }
 
-        return circleCount;
+        return samplingPointCount;
     }
 
-    private void reg(int circleCount) {
+    private void reg(int samplingPointCount) {
         if (!mIsBeginning) {
             if (!mStartingDet) {
-                if (MAX_CIRCLE == circleCount) {
+                if (MAX_SAMPLING_POINT_COUNT == samplingPointCount) {
                     mStartingDet = true;
                     mStartingDetCount = 0;
                 }
             } else {
-                if (MAX_CIRCLE == circleCount) {
+                if (MAX_SAMPLING_POINT_COUNT == samplingPointCount) {
                     ++mStartingDetCount;
 
-                    if (mStartingDetCount >= MIN_CIRCLE) {
+                    if (mStartingDetCount >= MIN_SAMPLING_POINT_COUNT) {
                         mIsBeginning = true;
                         mIsRegStart = false;
                         mRegCount = 0;
@@ -246,17 +246,17 @@ public class VoiceRecognition {
             }
         } else {
             if (!mIsRegStart) {
-                if (circleCount > 0) {
-                    mRegValue = circleCount;
-                    mRegIndex = INDEX[circleCount];
+                if (samplingPointCount > 0) {
+                    mRegValue = samplingPointCount;
+                    mRegIndex = INDEX[samplingPointCount];
                     mIsRegStart = true;
                     mRegCount = 1;
                 }
             } else {
-                if (circleCount == mRegValue) {
+                if (samplingPointCount == mRegValue) {
                     ++mRegCount;
 
-                    if (mRegCount >= MIN_CIRCLE) {
+                    if (mRegCount >= MIN_SAMPLING_POINT_COUNT) {
                         // ok
                         if (mRegValue != mPreRegCircle) {
                             if (null != mListener) {
