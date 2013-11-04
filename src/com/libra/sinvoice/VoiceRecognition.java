@@ -26,7 +26,7 @@ public class VoiceRecognition {
     private final static int STATE_STEP2 = 2;
     private final static int INDEX[] = { -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 6, -1, -1, -1, -1, 5, -1, -1, -1, 4, -1, -1, 3, -1, -1, 2, -1, -1, 1, -1, -1, 0 };
     private final static int MAX_SAMPLING_POINT_COUNT = 31;
-    private final static int MIN_SAMPLING_POINT_COUNT = 10;
+    private final static int MIN_REG_CIRCLE_COUNT = 10;
 
     private int mState;
     private Listener mListener;
@@ -235,7 +235,7 @@ public class VoiceRecognition {
                 if (MAX_SAMPLING_POINT_COUNT == samplingPointCount) {
                     ++mStartingDetCount;
 
-                    if (mStartingDetCount >= MIN_SAMPLING_POINT_COUNT) {
+                    if (mStartingDetCount >= MIN_REG_CIRCLE_COUNT) {
                         mIsBeginning = true;
                         mIsRegStart = false;
                         mRegCount = 0;
@@ -256,7 +256,7 @@ public class VoiceRecognition {
                 if (samplingPointCount == mRegValue) {
                     ++mRegCount;
 
-                    if (mRegCount >= MIN_SAMPLING_POINT_COUNT) {
+                    if (mRegCount >= MIN_REG_CIRCLE_COUNT) {
                         // ok
                         if (mRegValue != mPreRegCircle) {
                             if (null != mListener) {
