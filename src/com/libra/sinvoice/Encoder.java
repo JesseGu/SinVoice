@@ -38,7 +38,6 @@ public class Encoder implements SinGenerator.Listener, SinGenerator.Callback {
         void onStartEncode();
 
         void onEndEncode();
-
     }
 
     public static interface Callback {

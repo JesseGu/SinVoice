@@ -20,11 +20,13 @@ import com.libra.sinvoice.Buffer.BufferData;
 
 public class VoiceRecognition {
     private final static String TAG = "Recognition";
+
     private final static int STATE_START = 1;
     private final static int STATE_STOP = 2;
-    private final static int STATE_STEP1 = 1;
-    private final static int STATE_STEP2 = 2;
-    private final static int INDEX[] = { -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 6, -1, -1, -1, -1, 5, -1, -1, -1, 4, -1, -1, 3, -1, -1, 2, -1, -1, 1, -1, -1, 0 };
+    private final static int STEP1 = 1;
+    private final static int STEP2 = 2;
+    private final static int INDEX[] = { -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 6, -1, -1, -1, -1, 5, -1, -1, -1, 4, -1, -1, 3, -1, -1, 2, -1, -1, 1, -1, -1,
+            0 };
     private final static int MAX_SAMPLING_POINT_COUNT = 31;
     private final static int MIN_REG_CIRCLE_COUNT = 10;
 
@@ -85,7 +87,7 @@ public class VoiceRecognition {
                 mSamplingPointCount = 0;
 
                 mIsStartCounting = false;
-                mStep = STATE_STEP1;
+                mStep = STEP1;
                 mIsBeginning = false;
                 mStartingDet = false;
                 mStartingDetCount = 0;
@@ -135,24 +137,24 @@ public class VoiceRecognition {
             sh = (short) ((sh1) | (sh2));
 
             if (!mIsStartCounting) {
-                if (STATE_STEP1 == mStep) {
+                if (STEP1 == mStep) {
                     if (sh < 0) {
-                        mStep = STATE_STEP2;
+                        mStep = STEP2;
                     }
-                } else if (STATE_STEP2 == mStep) {
+                } else if (STEP2 == mStep) {
                     if (sh > 0) {
                         mIsStartCounting = true;
                         mSamplingPointCount = 0;
-                        mStep = STATE_STEP1;
+                        mStep = STEP1;
                     }
                 }
             } else {
                 ++mSamplingPointCount;
-                if (STATE_STEP1 == mStep) {
+                if (STEP1 == mStep) {
                     if (sh < 0) {
-                        mStep = STATE_STEP2;
+                        mStep = STEP2;
                     }
-                } else if (STATE_STEP2 == mStep) {
+                } else if (STEP2 == mStep) {
                     if (sh > 0) {
                         // preprocess the circle
                         int samplingPointCount = preReg(mSamplingPointCount);
@@ -161,7 +163,7 @@ public class VoiceRecognition {
                         reg(samplingPointCount);
 
                         mSamplingPointCount = 0;
-                        mStep = STATE_STEP1;
+                        mStep = STEP1;
                     }
                 }
             }
